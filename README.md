@@ -1,1 +1,18 @@
-# jarvis-assistant
+<!doctype html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JARVIS</title><style>body{margin:0;min-height:100vh;background:#02070b;color:#00eaff;font-family:Arial;text-align:center;display:flex;align-items:center;justify-content:center}.box{width:92%;max-width:700px}.orb{width:150px;height:150px;margin:auto;border:3px solid #00eaff;border-radius:50%;box-shadow:0 0 30px #00eaff,inset 0 0 25px #00eaff;animation:pulse 2s infinite}.listen{animation:pulse .7s infinite}h1{letter-spacing:8px;font-size:50px}button{padding:14px 24px;margin:8px;border:2px solid #00eaff;border-radius:30px;background:transparent;color:#00eaff;font-size:17px}.panel{margin-top:20px;border:1px solid #075c6d;border-radius:15px;padding:15px;text-align:left}.label{opacity:.6;font-size:12px;margin-top:10px}.value{font-size:18px;margin-top:5px}@keyframes pulse{50%{transform:scale(1.08);box-shadow:0 0 55px #00eaff,inset 0 0 35px #00eaff}}</style></head><body><div class="box"><div id="orb" class="orb"></div><h1>J.A.R.V.I.S</h1><div id="status">SYSTEM READY</div><button id="activate">🎙️ ACTIVATE</button><button id="stop">⏹ STOP</button><div class="panel"><div class="label">YOU SAID</div><div id="heard" class="value">Awaiting command...</div><div class="label">JARVIS</div><div id="reply" class="value">Ready.</div></div></div><script>
+const R=window.SpeechRecognition||window.webkitSpeechRecognition, a=document.getElementById("activate"),s=document.getElementById("stop"),st=document.getElementById("status"),h=document.getElementById("heard"),r=document.getElementById("reply"),o=document.getElementById("orb");let rec;
+function speak(x){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(x);u.lang="en-IN";speechSynthesis.speak(u)}
+function ans(x){r.textContent=x;speak(x)}
+function cmd(x){let q=x.trim(),t=q.toLowerCase();
+if(t.includes("hello")||t.includes("hi"))ans("Hello. How can I help you?");
+else if(t.includes("time"))ans("The time is "+new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));
+else if(t.includes("who are you")||t.includes("your name"))ans("I am Jarvis, your voice assistant.");
+else if(t.includes("open youtube")){ans("Opening YouTube.");setTimeout(()=>location.href="https://www.youtube.com/",600)}
+else if(t.includes("open google")){ans("Opening Google.");setTimeout(()=>location.href="https://www.google.com/",600)}
+else if(t.startsWith("search youtube")){let z=q.slice(14).trim();if(z){ans("Searching YouTube for "+z);setTimeout(()=>location.href="https://www.youtube.com/results?search_query="+encodeURIComponent(z),700)}else ans("What should I search on YouTube?")}
+else if(t.startsWith("search google")){let z=q.slice(13).trim();if(z){ans("Searching Google for "+z);setTimeout(()=>location.href="https://www.google.com/search?q="+encodeURIComponent(z),700)}else ans("What should I search on Google?")}
+else if(t.includes("goodbye")||t.includes("stop"))ans("Goodbye.");
+else ans("I heard you say: "+q+". I do not know that command yet.")}
+if(!R){st.textContent="VOICE NOT SUPPORTED";r.textContent="Use Chrome and allow microphone access."}else{rec=new R();rec.lang="en-IN";rec.interimResults=false;rec.continuous=false;rec.onstart=()=>{st.textContent="LISTENING...";o.classList.add("listen")};rec.onresult=e=>{h.textContent=e.results[0][0].transcript;cmd(h.textContent)};rec.onerror=e=>{st.textContent="MICROPHONE ERROR";r.textContent=e.error==="not-allowed"?"Allow microphone permission in Chrome.":"Could not hear you. Try again."};rec.onend=()=>{st.textContent="SYSTEM READY";o.classList.remove("listen")}}
+a.onclick=()=>{if(rec)try{h.textContent="Listening...";rec.start()}catch(e){}};
+s.onclick=()=>{if(rec)rec.stop();speechSynthesis.cancel();st.textContent="SYSTEM READY";o.classList.remove("listen")};
+</script></body></html># jarvis-assistant
